@@ -2,7 +2,7 @@
 require 'telegram/bot'
 require 'json'
 require 'net/http'
-token = '145094166:AAGDJgVnujnghM9zPnAxGCuLJQi93gIPOK8'
+token = ''
 
 def getRekt(uri)
   url = URI.parse(uri)

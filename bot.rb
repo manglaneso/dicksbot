@@ -19,30 +19,29 @@ def getRandom()
   @ret = data['dicks'][0]
 end
 
-
-
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
-
     begin
       case message
       when Telegram::Bot::Types::InlineQuery
         results = [
-          Telegram::Bot::Types::InlineQueryResultArticle
-            .new(id: 1, title: 'Cute', message_text: '8===D'),
-          Telegram::Bot::Types::InlineQueryResultArticle
-            .new(id: 2, title: 'Average', message_text: '8=====D'),
-          Telegram::Bot::Types::InlineQueryResultArticle
-            .new(id: 3, title: 'XL', message_text: '8==============D'),
-          Telegram::Bot::Types::InlineQueryResultArticle
-            .new(id: 4, title: 'Random', message_text: getRandom)
-        ]
+          [1, 'Cute', '8===D'],
+          [2, 'Average', '8=====D'],
+          [3, 'XL', '8==============D'],
+          [4, 'Random', getRandom]
+        ].map do |arr|
+          Telegram::Bot::Types::InlineQueryResultArticle.new(
+            id: arr[0],
+            title: arr[1],
+            input_message_content: Telegram::Bot::Types::InputTextMessageContent.new(message_text: arr[2])
+          )
+        end
         bot.api.answer_inline_query(inline_query_id: message.id, results: results)
       when Telegram::Bot::Types::Message
         bot.api.send_message(chat_id: message.chat.id, text: "Hello, #{message.from.first_name}!")
       end
     rescue Telegram::Bot::Exceptions::ResponseError => e
-        puts e.message
+      puts e.message
     end
   end
 end
